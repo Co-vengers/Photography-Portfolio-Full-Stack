@@ -1,5 +1,6 @@
 import Photo from "../models/Photo.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { canUploadFiles, uploadImage } from "../utils/uploadImage.js";
 
 export const getPhotos = asyncHandler(async (_req, res) => {
   const photos = await Photo.find().sort({ createdAt: -1 });
@@ -7,9 +8,17 @@ export const getPhotos = asyncHandler(async (_req, res) => {
 });
 
 export const createPhoto = asyncHandler(async (req, res) => {
-  const imageUrl = req.file
-    ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`
-    : req.body.imageUrl;
+  let imageUrl = req.body.imageUrl;
+
+  if (req.file) {
+    if (!canUploadFiles()) {
+      const error = new Error("File upload is unavailable. Add Cloudinary env vars or provide image URL.");
+      error.statusCode = 400;
+      throw error;
+    }
+
+    imageUrl = await uploadImage(req.file);
+  }
 
   if (!imageUrl) {
     const error = new Error("Image file or image URL is required");

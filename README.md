@@ -23,6 +23,10 @@ CLIENT_URL=http://localhost:5173
 ADMIN_NAME=Studio Admin
 ADMIN_EMAIL=admin@example.com
 ADMIN_PASSWORD=Admin@123
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+CLOUDINARY_FOLDER=photo-portfolio
 ```
 
 ### `client/.env`
@@ -30,6 +34,38 @@ ADMIN_PASSWORD=Admin@123
 ```env
 VITE_API_URL=http://localhost:5000/api
 ```
+
+## Vercel Deployment (Monorepo)
+
+Deploy this repository as two separate Vercel projects:
+
+1. **Backend API project**
+  - Root Directory: `server`
+  - Framework: `Other`
+  - Uses `server/api/index.js` as the serverless entrypoint.
+  - Set env vars: `MONGODB_URI`, `JWT_SECRET`, `CLIENT_URL`, `ADMIN_NAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`.
+  - For image file uploads in production, also set Cloudinary vars:
+    - `CLOUDINARY_CLOUD_NAME`
+    - `CLOUDINARY_API_KEY`
+    - `CLOUDINARY_API_SECRET`
+    - `CLOUDINARY_FOLDER` (optional)
+
+2. **Frontend project**
+  - Root Directory: `client`
+  - Framework: `Vite`
+  - Env var: `VITE_API_URL=https://<your-backend-domain>/api`
+
+3. **CORS alignment**
+  - Set backend `CLIENT_URL` to your frontend Vercel URL.
+
+4. **Health check**
+  - Verify backend at `https://<your-backend-domain>/api/health`.
+
+### Upload behavior
+
+- Admin uploads support either image URLs or image files.
+- On Vercel, local disk storage is not persistent. File uploads are sent to Cloudinary when Cloudinary vars are configured.
+- If Cloudinary vars are missing, use image URLs from the admin panel.
 
 ## Setup
 
