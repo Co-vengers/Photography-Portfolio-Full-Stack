@@ -28,6 +28,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
+app.get("/", (_req, res) => {
+  res.json({ message: "Photography Portfolio API is running" });
+});
+
 app.get("/api/health", (_req, res) => {
   res.json({ message: "API is running" });
 });
