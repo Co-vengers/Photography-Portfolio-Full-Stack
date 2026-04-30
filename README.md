@@ -33,6 +33,8 @@ CLOUDINARY_FOLDER=photo-portfolio
 
 ```env
 VITE_API_URL=http://localhost:5000/api
+# Vercel production example:
+# VITE_API_URL=https://<your-backend-domain>/api
 ```
 
 ## Vercel Deployment (Monorepo)
@@ -57,6 +59,7 @@ Deploy this repository as two separate Vercel projects:
 
 3. **CORS alignment**
   - Set backend `CLIENT_URL` to your frontend Vercel URL.
+  - If you use preview deployments, add them to `CLIENT_URLS` as a comma-separated list.
 
 4. **Health check**
   - Verify backend at `https://<your-backend-domain>/api/health`.
